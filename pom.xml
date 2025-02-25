@@ -1,227 +1,392 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion> 
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.cytoscape</groupId>
+	<artifactId>parent</artifactId>
+	<version>3.11.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Basic Cytoscape POM Configuration</name>
 
-  <groupId>com.example.maven-project</groupId>
-  <artifactId>maven-project</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>Maven Project</name>
-  <description>Sample Maven project with a working, deployable site.</description>
-  <url>http://www.example.com</url>
+	<properties>
 
-  <properties>
-    <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-  </properties>
+		<!-- Text encoding. We need to use UTF-8 for EVERYTHING. -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-  <modules>
-    <module>server</module>
-    <module>webapp</module>
-  </modules>
+		<!-- For unit testing -->
+		<junit.version>4.13</junit.version>
+		<mockito.version>3.2.4</mockito.version>
 
-  <distributionManagement>
-    <site>
-      <id>site-server</id>
-      <name>Test Project Site</name>
-      <url>file:///tmp/maven-project-site</url>
-    </site>
-  </distributionManagement>
+		<!-- Felix OSGi framework version -->
+		<felix.version>6.0.5</felix.version>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-                    <plugin>
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-war-plugin</artifactId>
-                   <version>3.3.2</version>
-                   <configuration>
-                       <failOnMissingWebXml>false</failOnMissingWebXml>
-                   </configuration>
-              </plugin>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-        </configuration>
-      </plugin>
+		<!-- OSGi framework version -->
+		<osgi.api.version>7.0.0</osgi.api.version>
 
-      <plugin>
-        <artifactId>maven-site-plugin</artifactId>
-        <configuration>
-          <reportPlugins>
-            <plugin>
-              <artifactId>maven-checkstyle-plugin</artifactId>
-            </plugin>
+		<!-- OSGi compendium version -->
+		<osgi.compendium.version>7.0.0</osgi.compendium.version>
 
-            <plugin>
-              <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
+		<!-- Karaf framework version. Used by both GUI/Headless -->
+		<karaf.version>4.3.9</karaf.version>
 
-            <plugin>
-              <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
+		<!-- PAX Exam version. This is for integration testing -->
+		<pax.exam.version>1.2.2</pax.exam.version>
 
-            <plugin>
-              <artifactId>maven-pmd-plugin</artifactId>
-            </plugin>
+		<!-- Maven Plugin versions -->
+		<maven-paxexam-plugin.version>1.2.4</maven-paxexam-plugin.version>
+		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+		<maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+		<maven-pax-plugin.version>1.5</maven-pax-plugin.version>
+		<maven-bundle-plugin.version>5.1.2</maven-bundle-plugin.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+		<maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
+		<maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
+		<maven-enforcer-plugin.version>1.0</maven-enforcer-plugin.version>
+		<maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
+		<maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+		<maven-replacer-plugin.version>1.3.9</maven-replacer-plugin.version>
 
-            <plugin>
-              <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
+	</properties>
 
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
+	<distributionManagement>
+		<repository>
+			<id>cytoscape_releases</id>
+			<name>Cytoscape Releases</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>cytoscape_snapshots</id>
+			<name>Cytoscape Snapshots</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-          </reportPlugins>
-        </configuration>
-      </plugin>
-    </plugins>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<release>17</release>
+					<optimize>true</optimize>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+					<compilerArguments>
+						<Xmaxwarns>10000</Xmaxwarns>
+						<Xmaxerrs>10000</Xmaxerrs>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<doclint>none</doclint>
+					<skip>false</skip>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<locale>en</locale>
+					<!-- <javadocVersion>[11.0,</javadocVersion> -->
+					<links>
+						<link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
+						<link>https://osgi.org/javadoc/r6/core/</link>
+					</links>
+					<footer>Cytoscape 3 Core API</footer>
+					<header>Cytoscape 3 Core API</header>
+					<bottom>Copyright 2021 Cytoscape Consortium. All rights reserved.</bottom>
+					<tagletArtifacts>
+						<tagletArtifact>
+							<groupId>org.cytoscape</groupId>
+							<artifactId>taglets</artifactId>
+							<version>3.11.0-SNAPSHOT</version>
+						</tagletArtifact>
+					</tagletArtifacts>
+					<groups>
+						<group>
+							<title>app-api</title>
+							<packages>org.cytoscape.app*</packages>
+						</group>
+						<group>
+							<title>application-api</title>
+							<packages>org.cytoscape.application*</packages>
+						</group>
+						<group>
+							<title>ci-api</title>
+							<packages>org.cytoscape.ci*</packages>
+						</group>
+						<group>
+							<title>command-executor-api</title>
+							<packages>org.cytoscape.command*</packages>
+						</group>
+						<group>
+							<title>core-task-api</title>
+							<packages>org.cytoscape.task*</packages>
+						</group>
+						<group>
+							<title>datasource-api</title>
+							<packages>org.cytoscape.io.datasource*</packages>
+						</group>
+						<group>
+							<title>equations-api</title>
+							<packages>org.cytoscape.equations*</packages>
+						</group>
+						<group>
+							<title>event-api</title>
+							<packages>org.cytoscape.event*</packages>
+						</group>
+						<group>
+							<title>filter-api</title>
+							<packages>org.cytoscape.filter*</packages>
+						</group>
+						<group>
+							<title>group-api</title>
+							<packages>org.cytoscape.group*</packages>
+						</group>
+						<group>
+							<title>io-api</title>
+							<packages>org.cytoscape.io:org.cytoscape.io.read*:org.cytoscape.io.util*:org.cytoscape.io.write*</packages>
+						</group>
+						<group>
+							<title>jobs-api</title>
+							<packages>org.cytoscape.jobs*</packages>
+						</group>
+						<group>
+							<title>layout-api</title>
+							<packages>org.cytoscape.view.layout*</packages>
+						</group>
+						<group>
+							<title>model-api</title>
+							<packages>org.cytoscape.model*</packages>
+						</group>
+						<group>
+							<title>presentation-api</title>
+							<packages>org.cytoscape.view.presentation*</packages>
+						</group>
+						<group>
+							<title>property-api</title>
+							<packages>org.cytoscape.property*</packages>
+						</group>
+						<group>
+							<title>service-api</title>
+							<packages>org.cytoscape.service*</packages>
+						</group>
+						<group>
+							<title>session-api</title>
+							<packages>org.cytoscape.session*</packages>
+						</group>
+						<group>
+							<title>swing-app-api</title>
+							<packages>org.cytoscape.app.swing*</packages>
+						</group>
+						<group>
+							<title>swing-application-api</title>
+							<packages>org.cytoscape.application.swing*</packages>
+						</group>
+						<group>
+							<title>swing-util-api</title>
+							<packages>org.cytoscape.util.swing*</packages>
+						</group>
+						<group>
+							<title>util-api</title>
+							<packages>org.cytoscape.util.color*:org.cytoscape.util.json*</packages>
+						</group>
+						<group>
+							<title>viewmodel-api</title>
+							<packages>org.cytoscape.view.model*</packages>
+						</group>
+						<group>
+							<title>vizmap-api</title>
+							<packages>org.cytoscape.view.vizmap*</packages>
+						</group>
+						<group>
+							<title>vizmap-api</title>
+							<packages>org.cytoscape.view.vizmap:org.cytoscape.view.vizmap.events*:org.cytoscape.view.vizmap.mappings*</packages>
+						</group>
+						<group>
+							<title>vizmap-gui-api</title>
+							<packages>org.cytoscape.view.vizmap.gui*</packages>
+						</group>
+						<group>
+							<title>webservice-api</title>
+							<packages>org.cytoscape.io.webservice:org.cytoscape.io.webservice.client*:org.cytoscape.io.webservice.events*</packages>
+						</group>
+						<group>
+							<title>webservice-swing-api</title>
+							<packages>org.cytoscape.io.webservice.swing*</packages>
+						</group>
+						<group>
+							<title>work-api</title>
+							<packages>org.cytoscape.work*</packages>
+						</group>
+					</groups>
+				</configuration>
+			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<inherited>false</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${maven-release-plugin.version}</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<goals>deploy</goals>
+					<!-- so that impl bundles with modules will build correctly -->
+					<preparationGoals>clean install</preparationGoals>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<!--argLine>${argLine} -Xmx256m</argLine-->
+					<argLine>-Xmx256m</argLine>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.3</version>
+				<configuration>
+					<verbose>false</verbose>
+					<addSvnKeyWords>true</addSvnKeyWords>
+					<organizationName>The Cytoscape Consortium</organizationName>
+					<inceptionYear>2015</inceptionYear>
+					<licenseName>lgpl_v2_1</licenseName>
 
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.8</version>
-        </plugin>
+					<failOnMissingHeader>true</failOnMissingHeader>
+					<ignoreTag>%% Ignore-License</ignoreTag>
+					<roots>
+						<root>src/main/java</root>
+						<root>src/test</root>
+						<root>target/generated-sources</root>
+					</roots>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+					<excludes>
+						<exclude>**/package-info.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
 
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>2.3.2</version>
-        </plugin>
+		<!-- this is the preferred method of deployment transport mechanism -->
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+		</extensions>
+	</build>
 
-        <plugin>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.8</version>
-        </plugin>
+	<!-- these items don't exist in the typical public maven repos; we could
+		add these directly to Nexus if desired -->
+	<repositories>
+		<repository>
+			<id>cytoscape_snapshots</id>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<name>Cytoscape Snapshots</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_snapshots/</url>
+		</repository>
+		<repository>
+			<id>cytoscape_releases</id>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<name>Cytoscape Releases</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_releases/</url>
+		</repository>
+		<repository>
+			<id>cytoscape_thirdparty</id>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<name>Cytoscape Third Party</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_thirdparty/</url>
+		</repository>
+	</repositories>
 
-        <plugin>
-          <artifactId>maven-jxr-plugin</artifactId>
-          <version>2.3</version>
-        </plugin>
+	<pluginRepositories>
 
-        <plugin>
-          <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.6</version>
-        </plugin>
+		<pluginRepository>
+			<id>cytoscape_snapshots</id>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<name>Cytoscape Snapshots</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_snapshots/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>cytoscape_releases</id>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<name>Cytoscape Releases</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_releases/</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>cytoscape_thirdparty</id>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<name>Cytoscape Third Party</name>
+			<url>https://nrnb-nexus.ucsd.edu/repository/cytoscape_thirdparty/</url>
+		</pluginRepository>
+	</pluginRepositories>
 
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>2.4</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.2.1</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.0</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-surefire-report-plugin</artifactId>
-          <version>2.11</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.11</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.3.3</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>taglist-maven-plugin</artifactId>
-          <version>2.4</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.mortbay.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <version>8.0.0.M1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.5</version>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.servlet.jsp</groupId>
-        <artifactId>jsp-api</artifactId>
-        <version>2.2</version>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit-dep</artifactId>
-        <version>4.10</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-core</artifactId>
-        <version>1.2.1</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-library</artifactId>
-        <version>1.2.1</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>1.8.5</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <scm>
-    <connection>scm:git:git@github.com:jleetutorial/maven-project.git</connection>
-    <developerConnection>scm:git:git@github.com:jleetutorial/maven-project.git</developerConnection>
-    <tag>HEAD</tag>
-    <url>http://github.com/jleetutorial/maven-project</url>
-  </scm>
-
-  <prerequisites>
-    <maven>3.0.3</maven>
-  </prerequisites>
-
+	<scm>
+		<connection>scm:git:git://github.com/cytoscape/cytoscape-parent.git</connection>
+		<developerConnection>scm:git:git@github.com:cytoscape/cytoscape-parent.git</developerConnection>
+		<url>https://github.com/cytoscape/cytoscape-parent.git</url>
+	</scm>
 </project>
